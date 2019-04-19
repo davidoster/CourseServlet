@@ -43,4 +43,9 @@ public class CourseImpl implements CourseInterface {
        }
        return true;
     }
+    
+    public boolean deleteCourse(CourseDAO dao, int id) {
+        dao.deleteCourse(dao, id);
+        return false;
+    }
 }

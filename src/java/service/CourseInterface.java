@@ -17,4 +17,5 @@ public interface CourseInterface {
     
     public List<Course> getAllCourses(CourseDAO dao);
     public boolean saveCourse(CourseDAO dao, Course course);
+    public boolean deleteCourse(CourseDAO dao, int id);
 }

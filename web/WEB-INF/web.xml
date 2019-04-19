@@ -7,6 +7,7 @@
     <servlet-mapping>
         <servlet-name>CourseServlet</servlet-name>
         <url-pattern>/course</url-pattern>
+        <url-pattern>/course/delete/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

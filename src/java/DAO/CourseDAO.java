@@ -46,4 +46,9 @@ public class CourseDAO extends Database {
         Logger.getLogger(CourseServlet.class.getName()).log(Level.SEVERE, null, sql);
         return (db.Database(server, database, username, password, sql, (byte)1) == 1);
     }
+    
+    public boolean deleteCourse(CourseDAO dao, int id) {
+        String sql = "DELETE FROM `Course` WHERE `id`=" + id;
+        return(db.Database(server, database, username, password, sql, (byte)1) == 1);
+    }
 }

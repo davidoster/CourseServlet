@@ -9,7 +9,9 @@ import DAO.CourseDAO;
 import entities.Course;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static java.lang.Integer.parseInt;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,17 +65,36 @@ public class CourseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         CourseImpl courseService = new CourseImpl();
         CourseDAO dao = new CourseDAO();
+        Enumeration en = request.getParameterNames();
+        String errorMsg = "";
         
-        
-        
+	while(en.hasMoreElements())
+	{
+            Object objOri = en.nextElement();
+            String param  = (String)objOri;
+            String value  = request.getParameter(param);
+            if(param.equals("method") && value.equals("delete")) {
+                dao.deleteCourse(dao, parseInt(request.getParameter("id")));
+                errorMsg = "<h3>Record with Id:" + request.getParameter("id") + " is deleted!</h3>";
+                
+                //response.sendRedirect("course");
+            }
+	}	
         List<Course> courses = courseService.getAllCourses(dao);
         
         //processRequest(request, response);
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            if(errorMsg.length() > 0) {
+                out.println(errorMsg);
+                for(int i = 0; i < 200000000; i++){}
+                //response.sendRedirect("course");
+                
+            } else {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -81,9 +102,14 @@ public class CourseServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>List Of Courses" + "</h1>");
+            out.println(errorMsg);
             for(Course acourse : courses) {
-                out.println(acourse + "<br>");
+                out.println(acourse + "<a href='http://localhost:8084/CourseServlet/course?method=delete&id=" + acourse.getId() + "'>Delete</a>" + "<br>");
             }
+            
+            //http://localhost:8084/CourseServlet/course?method=delete&id=1 // getParameter
+            //http://localhost:8084/CourseServlet/course/delete/1 // PathVariable
+            
             out.println("<form name=\"getcourse\" action=\"course\" method=\"POST\">\n" +
 "            Title: <input type=\"text\" name=\"title\" value=\"\" /><br />\n" +
 "            Stream: <input type=\"text\" name=\"stream\" value=\"\" /><br />\n" +
@@ -94,7 +120,7 @@ public class CourseServlet extends HttpServlet {
 "        </form>");
             out.println("</body>");
             out.println("</html>");
-        
+            }
        }
     }
 
